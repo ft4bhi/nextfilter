@@ -2,7 +2,7 @@
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-import Image from "next/image";
+
 import { ChevronDown, Filter } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,8 @@ import Product from "@/components/product/Product"
 import ProductSkall from "@/components/product/ProductSkall";
 import { Accordion, AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
 import { AccordionItem } from "@radix-ui/react-accordion";
-import { Label } from "@radix-ui/react-dropdown-menu";
+import { ProductState } from "@/lib/validater/product-validator";
+
 
 const SORT_OPTION = [
   { name: "None", value: "None" },
@@ -42,10 +43,14 @@ const SUBCATEGORIES = [
   { name: "Accessories", Selected: false, href: "#" }
 ]
 
+const DEFAULT_CUSTOM_PRICE = [0, 100] as [number, number]
 
 export default function Home() {
-  const [filter, setFilter] = useState({
-    sort: "None",
+  const [filter, setFilter] = useState<ProductState>({
+    color: ['beige', 'blue', 'green', 'purple', 'white'],
+    price: { isCuston: false, range: DEFAULT_CUSTOM_PRICE },
+    size: ['S', 'M', 'L'],
+    sort: 'none',
   });
 
   const { data: products } = useQuery({
@@ -62,7 +67,14 @@ export default function Home() {
     },
   })
 
-  console.log(products);
+  const applayArrayFilter = ({
+    category, value
+  }: {
+    category: keyof Omit<typeof filter, "color " | "sort">
+    value: string//"S","m","white","orang"
+  }) => {
+
+  }
   return (
     <main className=" mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
@@ -70,6 +82,9 @@ export default function Home() {
           High-Qulity-Cotton-Selection
         </h1>
         <div className="flex items-center">
+
+
+
           <DropdownMenu>
             <DropdownMenuTrigger className=" group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
               sort
@@ -110,6 +125,8 @@ export default function Home() {
                 </li>
               ))}
             </ul>
+
+
             <Accordion type='single' collapsible={true} className='animate-none'>
               {/* color filter */}
               <AccordionItem value='color'>
@@ -130,6 +147,8 @@ export default function Home() {
               </AccordionItem>
             </Accordion>
           </div>
+
+
           {/* product code */}
           <ul className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {products ? products.map((product) => (
