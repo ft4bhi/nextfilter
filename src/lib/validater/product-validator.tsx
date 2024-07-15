@@ -12,5 +12,5 @@ export const ProductFilterValidater = z.object({
 })
 
 export type ProductState = Omit<z.infer<typeof ProductFilterValidater>, "price"> & {
-    price: { isCuston: boolean, range: [number, number] }
+    price: { isCustom: boolean, range: [number, number] }
 }
